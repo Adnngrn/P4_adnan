@@ -1,13 +1,13 @@
 <div class="fixed w-60 h-screen bg-gray-300 py-5">
     <h1 class="text-center font-medium text-xl mt-3">Admin</h1>
-    <ul class="mt-10 grid gap-5">
-        <li class="px-10 py-3 mb-2 w-full bg-blue-300" id="dashboard"><a href="dashboard.php?page=dashboard">Dashboard</a></li><hr>
-        <li class="px-10 py-3 mt-2 w-full bg-blue-300" id="product"><a href="product.php?page=product">Product</a></li>
-        <li class="px-10 py-3 w-full bg-blue-300" id="promo"><a href="promo.php?page=promo">Promo</a></li>
-        <li class="px-10 py-3 w-full bg-blue-300" id="history"><a href="history.php?page=history">History</a></li>
-        <li class="px-10 py-3 w-full bg-blue-300" id="accounts"><a href="accounts.php?page=accounts">Accounts</a></li>
-        <li class="px-10 py-3 w-full bg-blue-300 mt-20"><a href="../logout.php">Logout</a></li>
-    </ul>
+    <div class="mt-10 grid gap-5">
+        <a class="px-10 py-3 mb-2 w-fdivl bg-blue-300" id="dashboard" href="dashboard.php?page=dashboard">Dashboard</a><hr>
+        <a class="px-10 py-3 mt-2 w-fdivl bg-blue-300" id="product" href="product.php?page=product">Product</a>
+        <a class="px-10 py-3 w-fdivl bg-blue-300" id="promo" href="promo.php?page=promo">Promo</a>
+        <a class="px-10 py-3 w-fdivl bg-blue-300" id="history" href="history.php?page=history">History</a>
+        <a class="px-10 py-3 w-fdivl bg-blue-300" id="accounts" href="accounts.php?page=accounts">Accounts</a>
+        <a class="px-10 py-3 w-fdivl bg-blue-300 mt-20" href="../logout.php">Logout</a>
+    </div>
 </div>
 
 <script>
