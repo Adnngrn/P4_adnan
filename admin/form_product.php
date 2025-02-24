@@ -1,25 +1,6 @@
 <?php
 include '../connection.php';
 
-// if (isset($_POST['submit'])) {
-//     $name  = $_POST['product_name'];
-//     $price = $_POST['price'];
-//     $entry_date = $_POST['entry_date'];
-//     $stock_id = $_POST['stock_id'];
-//     $image = $_FILES['product_img']['name'];
-    
-//     $target = "../product_img/" . basename($image);
-//     move_uploaded_file($_FILES['product_img']['tmp_name'], $target);
-    
-//     $query = "INSERT INTO products (product_name, product_img, stock_id, price, entry_date) 
-//               VALUES ('$name', '$image', '$stock_id', '$price', '$entry_date')";
-    
-//     if ($conn->query($query)) {
-//         header("Location: product.php?page=product  .php");
-//     } else {
-//         echo "Gagal menambahkan produk!";
-//     }
-// }
 // Cek apakah sedang edit atau tambah data
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 $edit_mode = false;
@@ -34,7 +15,7 @@ if ($id) {
         $row = $result->fetch_assoc();
         $product_name = $row['product_name'];
         $price = $row['price'];
-        $entry_date = $_POST['entry_date'];
+        $entry_date = $row['entry_date']; // Perbaikan di sini
         $stock_id = $row['stock_id'];
         $product_img = $row['product_img'];
     }
@@ -44,65 +25,77 @@ if ($id) {
 if (isset($_POST['submit'])) {
     $name = $_POST['product_name'];
     $price = $_POST['price'];
-    $entry_date = $_POST['entry_date'];
+    $entry_date = isset($_POST['entry_date']) ? $_POST['entry_date'] : date("Y-m-d"); // Pastikan tidak undefined
     $stock_id = $_POST['stock_id'];
     $image = $_FILES['product_img']['name'];
 
-    if ($image) {
+    // Proses upload gambar jika ada
+    if (!empty($image)) {
         $target = "../product_img/" . basename($image);
         move_uploaded_file($_FILES['product_img']['tmp_name'], $target);
     } else {
-        $image = $product_img;
+        $image = $product_img; // Gunakan gambar lama jika tidak ada upload baru
     }
 
     if ($edit_mode) {
-        $query = "UPDATE products SET product_name='$name', product_img='$image', stock_id='$stock_id', price='$price' WHERE id_product=$id";
+        $query = "UPDATE products SET product_name='$name', product_img='$image', stock_id='$stock_id', price='$price', entry_date='$entry_date' WHERE id_product=$id";
     } else {
         $query = "INSERT INTO products (product_name, product_img, stock_id, price, entry_date) 
                   VALUES ('$name', '$image', '$stock_id', '$price', '$entry_date')";
     }
 
     if ($conn->query($query)) {
-        header("Location: index.php");
+        header("Location: product.php?page=product");
+        exit();
     } else {
-        echo "Gagal menyimpan produk!";
+        echo "Gagal menyimpan produk! Error: " . $conn->error;
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Form Produk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="flex">
     <div id="sidebar"></div>
 
-    <div  class="ml-60  w-full px-3 py-7">
+    <div class="ml-60 w-full px-3 py-7">
         <div class="mb-10">
             <a class="py-1 flex justify-center items-center w-24 rounded-lg border border-2 border-blue-700" href="product.php?page=product">Kembali</a>
         </div>
 
         <div>
-        <form method="POST" enctype="multipart/form-data">
-            Nama Produk: <input type="text" name="product_name" value="<?= $product_name; ?>" required><br>
-            Harga: <input type="number" name="price" value="<?= $price; ?>" required><br>
-            Gambar: <input type="file" name="product_img"><br>
-            <?php if ($edit_mode && $product_img): ?>
-                <img src="uploads/<?= $product_img; ?>" width="50"><br>
+            <form method="POST" enctype="multipart/form-data">
+                <label>Nama Produk:</label>
+                <input type="text" name="product_name" value="<?= $product_name; ?>" required><br>
+
+                <label>Harga:</label>
+                <input type="number" name="price" value="<?= $price; ?>" required><br>
+
+                <label>Gambar:</label>
+                <input type="file" name="product_img"><br>
+                <?php if ($edit_mode && !empty($product_img)): ?>
+                    <img src="../product_img/<?= $product_img; ?>" width="50"><br>
                 <?php endif; ?>
-            Tanggal Masuk Produk: <input type="date" name="entry_date" value="<?= $entry_date; ?>" required><br>
-            Stok: 
-            <select name="stock_id">
-                <option value="1" <?= ($stock_id == 1) ? 'selected' : ''; ?>>Tersedia</option>
-                <option value="2" <?= ($stock_id == 2) ? 'selected' : ''; ?>>Habis</option>
-            </select><br>
-            <button type="submit" name="submit"><?= $edit_mode ? 'Update' : 'Simpan' ?></button>
-            <a href="product.php?page=product">Batal</a>
-        </form>
+
+                <label>Tanggal Masuk Produk:</label>
+                <input type="date" name="entry_date" value="<?= $entry_date; ?>" required><br>
+
+                <label>Stok:</label>
+                <select name="stock_id">
+                    <option value="1" <?= ($stock_id == 1) ? 'selected' : ''; ?>>Tersedia</option>
+                    <option value="2" <?= ($stock_id == 2) ? 'selected' : ''; ?>>Habis</option>
+                </select><br>
+
+                <button type="submit" name="submit"><?= $edit_mode ? 'Update' : 'Simpan' ?></button>
+                <a href="product.php?page=product">Batal</a>
+            </form>
         </div>
     </div>
 

@@ -45,13 +45,13 @@ $result = $conn->query($query);
             <tr>
                 <td><?= $no++; ?></td>
                 <td><?= $row['product_name']; ?></td>
-                <td><img src="../product_img/<?= $row['product_img']; ?>" width="50"></td>
+                <td class="flex justify-center items-center"><img src="../product_img/<?= $row['product_img']; ?>" class="size-20"></td>
                 <td>Rp <?= number_format($row['price'], 2, ',', '.'); ?></td>
                 <td><?= ucfirst($row['stock']); ?></td>
                 <td><?= $row['entry_date']; ?></td>
                 <td>
                     <a href="form_product.php?id=<?= $row['id_product']; ?>">Edit</a> | 
-                    <a href="delete.php?id=<?= $row['id_product']; ?>" onclick="return confirm('Hapus produk ini?')">Hapus</a>
+                    <a href="del_product.php?id=<?= $row['id_product']; ?>" onclick="return confirm('Hapus produk ini?')">Hapus</a>
                 </td>
             </tr>
             <?php endwhile; ?>
