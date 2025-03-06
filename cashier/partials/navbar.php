@@ -6,11 +6,11 @@
 </div>
 
 <script>
-    const params = new URLSearchParams(window.location.search);
-    const page = params.get('page');
+    // const params = new URLSearchParams(window.location.search);
+    // const page = params.get('page');
     
-    if (page) {
-        document.getElementById(page)?.classList.add('bg-blue-500');
-        document.getElementById(page)?.classList.remove('hover:bg-blue-600');
-    }
+    // if (page) {
+    //     document.getElementById(page)?.classList.add('bg-blue-500');
+    //     document.getElementById(page)?.classList.remove('hover:bg-blue-600');
+    // }
 </script>
