@@ -19,6 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
     if (!$type || !$discount_type || !$discount_value || !$start_date || !$end_date) {
         die("Semua data harus diisi!");
     }
+    // Cek jika diskon persentase melebihi 100
+    if ($discount_type === 'percentage' && $discount_value >= 100) {
+        die("Diskon persentase tidak boleh lebih dari 100%.");
+    }
+
 
     if ($id) {
         // Update diskon

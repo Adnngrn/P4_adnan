@@ -108,9 +108,23 @@ $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC
                 $('#productSelect').toggle(type === 'product');
                 $('#categorySelect').toggle(type === 'category');
             }
+
+            function validateDiscountValue() {
+                let discountType = $('select[name="discount_type"]').val();
+                let discountValue = $('input[name="discount_value"]');
+
+                if (discountType === 'percentage' && discountValue.val() >= 100) {
+                    discountValue.val(0);
+                    alert('Nilai diskon persentase tidak boleh lebih dari atau sama dengan 100%');
+                }
+            }
+
             toggleFields();
             $('#discountType').change(toggleFields);
+            $('select[name="discount_type"]').change(validateDiscountValue);
+            $('input[name="discount_value"]').on('input', validateDiscountValue);
         });
     </script>
+
 </body>
 </html>
