@@ -111,4 +111,66 @@ $('#clearCart').click(() => {
     updateCart();
 });
 
+// $('#checkout').click(() => {
+//     if (cart.length === 0) {
+//         alert('Keranjang masih kosong!');
+//         return;
+//     }
+
+//     let checkoutData = {
+//         cart: cart,
+//         subtotal: parseFloat($('#subtotalPrice').text().replace(/[^0-9]/g, '')),
+//         totalDiscount: parseFloat($('#totalDiscount').text().replace(/[^0-9]/g, '')),
+//         total: parseFloat($('#totalPrice').text().replace(/[^0-9]/g, ''))
+//     };
+
+//     $.ajax({
+//         url: 'process_checkout.php',
+//         type: 'POST',
+//         contentType: 'application/json',
+//         data: JSON.stringify(checkoutData),
+//         success: function(response) {
+//             if (response.status === 'success') {
+//                 alert('Transaksi berhasil! Invoice: ' + response.invoice);
+//                 localStorage.removeItem('cart');
+//                 cart = [];
+//                 updateCart();
+//             } else {
+//                 alert('Terjadi kesalahan: ' + response.message);
+//             }
+//         },
+//         error: function() {
+//             alert('Gagal memproses checkout!');
+//         }
+//     });
+// });
+
+$('#checkoutButton').click(function () {
+    if (cart.length === 0) {
+        alert("Keranjang masih kosong!");
+        return;
+    }
+
+    $.ajax({
+        url: 'process_checkout.php',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(cart),
+        success: function (response) {
+            if (response.status === 'success') {
+                alert(response.message);
+                localStorage.removeItem('cart'); // Bersihkan keranjang
+                window.location.href = response.redirect; // Redirect ke invoice
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert("Terjadi kesalahan saat checkout.");
+        }
+    });
+});
+
+
+
 updateCart();

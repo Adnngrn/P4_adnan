@@ -97,7 +97,7 @@ foreach ($discounts as $discount) {
                 <p class="text-sm flex justify-between">TOTAL <span class="font-medium" id="totalPrice">Rp 0</span></p>
                 <div class="grid grid-cols-2 gap-1 px-5 mt-10">
                     <button class="bg-blue-600 text-white rounded-md py-1" id="clearCart">Hapus Semua</button>
-                    <button class="bg-blue-600 text-white rounded-md py-1">Checkout</button>
+                    <button class="bg-blue-600 text-white rounded-md py-1" id="checkoutButton">Checkout</button>
                 </div>
             </div>
         </div>

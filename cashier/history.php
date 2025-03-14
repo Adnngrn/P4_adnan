@@ -1,104 +1,37 @@
 <?php
-session_start();
+require '../connection.php'; // Koneksi ke database
 
-// Daftar Produk
-$products = [
-    1 => ['name' => 'Produk A', 'price' => 10000],
-    2 => ['name' => 'Produk B', 'price' => 15000],
-    3 => ['name' => 'Produk C', 'price' => 20000],
-    4 => ['name' => 'Produk D', 'price' => 25000],
-    5 => ['name' => 'Produk E', 'price' => 30000],
-];
-
-// Inisialisasi keranjang jika belum ada
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
-}
-
-// Tambah ke keranjang
-if (isset($_POST['add_to_cart'])) {
-    $id = $_POST['product_id'];
-    $quantity = $_POST['quantity'];
-    
-    if (isset($_SESSION['cart'][$id])) {
-        $_SESSION['cart'][$id] += $quantity;
-    } else {
-        $_SESSION['cart'][$id] = $quantity;
-    }
-}
-
-// Kurangi dari keranjang
-if (isset($_POST['decrease_from_cart'])) {
-    $id = $_POST['product_id'];
-    if (isset($_SESSION['cart'][$id])) {
-        $_SESSION['cart'][$id]--;
-        if ($_SESSION['cart'][$id] <= 0) {
-            unset($_SESSION['cart'][$id]);
-        }
-    }
-}
-
-// Hapus dari keranjang
-if (isset($_POST['remove_from_cart'])) {
-    $id = $_POST['product_id'];
-    unset($_SESSION['cart'][$id]);
-}
-
-// Hitung total harga dan diskon
-function calculate_total() {
-    global $products;
-    $total = 0;
-    
-    foreach ($_SESSION['cart'] as $id => $qty) {
-        $total += $products[$id]['price'] * $qty;
-    }
-    
-    $discount = 0;
-    if ($total > 50000) {
-        $discount = $total * 0.1; // Diskon 10% jika total belanja di atas 50.000
-    } elseif (array_sum($_SESSION['cart']) > 5) {
-        $discount = $total * 0.05; // Diskon 5% jika jumlah barang lebih dari 5
-    }
-    
-    return ['total' => $total, 'discount' => $discount, 'final_total' => $total - $discount];
-}
-
-$totals = calculate_total();
+// Ambil semua transaksi
+$query = "SELECT invoice_number, created_at FROM transactions ORDER BY created_at DESC";
+$stmt = $pdo->query($query);
+$transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Kasir PHP Native</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body>
-    <h2>Daftar Produk</h2>
-    <?php foreach ($products as $id => $product): ?>
-        <form method="POST">
-            <p>
-                <?= $product['name']; ?> - Rp<?= number_format($product['price']); ?>
-                <input type="hidden" name="product_id" value="<?= $id; ?>">
-                <input type="number" name="quantity" value="1" min="1">
-                <button type="submit" name="add_to_cart">Tambah</button>
-            </p>
-        </form>
-    <?php endforeach; ?>
-    
-    <h2>Keranjang</h2>
-    <?php foreach ($_SESSION['cart'] as $id => $qty): ?>
-        <form method="POST">
-            <p>
-                <?= $products[$id]['name']; ?> - <?= $qty; ?> x Rp<?= number_format($products[$id]['price']); ?>
-                <button type="submit" name="decrease_from_cart">Kurang</button>
-                <button type="submit" name="remove_from_cart">Hapus</button>
-                <input type="hidden" name="product_id" value="<?= $id; ?>">
-            </p>
-        </form>
-    <?php endforeach; ?>
-    
-    <h2>Invoice</h2>
-    <p>Total: Rp<?= number_format($totals['total']); ?></p>
-    <p>Diskon: Rp<?= number_format($totals['discount']); ?></p>
-    <p>Total Bayar: Rp<?= number_format($totals['final_total']); ?></p>
+<body class="bg-stone-200">
+    <div class="flex flex-col p-5 mb-10">
+        <h1 class="text-xl font-medium mb-5">History</h1>
+        <div class="flex flex-col gap-3 w-full">
+            <?php foreach ($transactions as $transaction): ?>
+                <a href="invoice.php?invoice=<?= $transaction['invoice_number'] ?>" 
+                   class="px-10 py-3 bg-white rounded-md drop-shadow-md flex justify-between items-center">
+                    <span class="text-lg font-medium"><?= htmlspecialchars($transaction['invoice_number']) ?></span>
+                    <span class="text-sm text-gray-500"><?= date('d-m-Y H:i:s', strtotime($transaction['created_at'])) ?></span>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div id="navbar"></div>
+
+    <script src="script.js"></script>
+    <script src="cashier.js"></script>
 </body>
 </html>
