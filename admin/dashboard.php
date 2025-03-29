@@ -3,11 +3,17 @@ $requireAdmin = true;
 require '../auth.php';
 require '../connection.php';
 
-$stmt = $pdo->query("SELECT COUNT(*) AS total FROM products");
-$totalProducts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+$stmt = $pdo->query("
+    SELECT 
+        (SELECT COUNT(*) FROM products) AS totalProducts, 
+        (SELECT COUNT(*) FROM discounts) AS totalDiscounts, 
+        (SELECT COUNT(*) FROM transactions WHERE DATE(created_at) = CURDATE()) AS totalTransactionsToday
+");
+$counts = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$stmt = $pdo->query("SELECT COUNT(*) AS total FROM discounts");
-$totalDiscounts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+$totalProducts = $counts['totalProducts'];
+$totalDiscounts = $counts['totalDiscounts'];
+$totalTransactionsToday = $counts['totalTransactionsToday'];
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +21,7 @@ $totalDiscounts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dashboard | Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -37,12 +43,12 @@ $totalDiscounts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
                     <p><?= $totalDiscounts ?></p>
                 </div>
             </a>
-            <div class="grid grid-rows-4 h-32 w-64 py-2 px-4 bg-white drop-shadow-md rounded-md">
-                <h2 class="text-xl font-medium">Produk</h2>
+            <a href="history.php" class="grid grid-rows-4 h-32 w-64 py-2 px-4 bg-white drop-shadow-md rounded-md">
+                <h2 class="text-xl font-medium">Transaksi Hari ini</h2>
                 <div class="row-span-3 flex  justify-center h-auto w-full text-6xl">
-                    <p>30 </p>
+                    <p><?= $totalTransactionsToday ?></p>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="bg-white w-full h-48 rounded-lg drop-shadow-lg"></div>

@@ -151,6 +151,10 @@ $('#checkoutButton').click(function () {
         return;
     }
 
+    if (!confirm("Yakin dengan pesanannya?")) {
+        return; // Batalkan checkout jika user memilih "Cancel"
+    }
+
     $.ajax({
         url: 'process_checkout.php',
         type: 'POST',
@@ -170,7 +174,5 @@ $('#checkoutButton').click(function () {
         }
     });
 });
-
-
 
 updateCart();
