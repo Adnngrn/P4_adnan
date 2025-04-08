@@ -176,3 +176,4 @@ $('#checkoutButton').click(function () {
 });
 
 updateCart();
+

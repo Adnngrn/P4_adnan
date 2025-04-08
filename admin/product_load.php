@@ -40,8 +40,10 @@ if (count($products) > 0) {
     $no = 1;
     foreach ($products as $row) {
         echo "
-        <a href='product_detail.php?id={$row['id']}' class='w-56 h-auto bg-white drop-shadow-md rounded-xl py-2 px-2'>
-            <img src='../product_img/{$row['image']}' alt='' class='max-h-40 w-full bg-red-200'>
+        <a href='product_detail.php?id={$row['id']}' class='max-w-72 bg-white grid content-between drop-shadow-md rounded-xl py-2 px-2'>
+            <div class='h-40 w-full'>
+            <img src='../product_img/{$row['image']}' alt='' class='object-contain h-40 w-full'>
+            </div>
             <div class='mt-3'>
                 <h3 class='font-medium text-md'>{$row['name']}</h3>
                 <p class='text-gray-400 text-sm'>{$row['category_name']}</p>

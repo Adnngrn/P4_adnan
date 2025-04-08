@@ -41,7 +41,7 @@ foreach ($transactions as $transaction) {
 }
 
 // Kategori yang mencakup data sebelumnya
-$filters["thisWeek"] = array_merge($filters["today"], $filters["yesterday"], $filters["thisWeek"]);
+$filters["thisWeek"] = array_merge($filters["yesterday"], $filters["thisWeek"]);
 $filters["thisMonth"] = array_merge($filters["thisWeek"], $filters["thisMonth"]);
 
 function renderTransactionHTML($transactions) {
@@ -80,8 +80,8 @@ $transactionsJSON = json_encode($filters);
         <select id="filterSelect" class="w-96 mb-5 px-4 py-2 border rounded-md shadow">
             <option value="today">Hari Ini</option>
             <option value="yesterday">Kemarin</option>
-            <option value="thisWeek">Minggu ini</option>
-            <option value="thisMonth">Bulan ini</option>
+            <option value="thisWeek">7 Hari Kebelakang</option>
+            <option value="thisMonth">30 Hari Kebelakang</option>
             <option value="lastMonth">Bulan lalu</option>
             <option value="older">Terlama</option>
         </select>

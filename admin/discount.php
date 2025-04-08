@@ -44,6 +44,7 @@ $discounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div id="sidebar"></div>
 
     <div class="ml-60  w-full px-3 py-7">
+    <h1 class="text-2xl font-medium mb-5">Diskon</h1>
         <div class="mb-10">
             <a class="py-3 flex justify-center items-center w-32 rounded-lg border border-2 border-blue-700 text-blue-800 font-medium hover:bg-blue-700 hover:text-white" href="discount_form.php">+Discount</a>
         </div>
@@ -59,54 +60,57 @@ $discounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
         </div>
 
-        <table border="1" class="w-full bg-white">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Judul</th>
-                    <th>Tipe</th>
-                    <th>Produk</th>
-                    <th>Kategori</th>
-                    <th>Tipe Diskon</th>
-                    <th>Nilai Diskon</th>
-                    <th>Jumlah Minimal</th>
-                    <th>Mulai</th>
-                    <th>Berkahir</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="discountList">
-                <?php
-                $no = 1;
-                foreach ($discounts as $discount): ?>
-                    <tr>
-                        <td><?= $no++; ?></td>
-                        <td><?= htmlspecialchars($discount['name']); ?></td>
-                        <td><?= htmlspecialchars($discount['type']); ?></td>
-                        <td><?= $discount['product_name'] ? $discount['product_name'] : '-'; ?></td>
-                        <td><?= $discount['category_name'] ? $discount['category_name'] : '-'; ?></td>
-                        <td><?= ucfirst($discount['discount_type']); ?></td>
-                        <td>
-                            <?= $discount['discount_type'] === 'percentage' 
-                                ? number_format($discount['discount_value'], 2, ',', '.') . '%' 
-                                : 'Rp ' . number_format($discount['discount_value'], 0, ',', '.'); ?>
-                        </td>
-                        <td><?= $discount['min_quantity'] ? $discount['min_quantity'] : '-'; ?></td>
-                        <td><?= date('d-m-Y', strtotime($discount['start_date'])); ?></td>
-                        <td><?= date('d-m-Y', strtotime($discount['end_date'])); ?></td>
-                        <td class="border p-2">
-                            <a href="discount_form.php?id=<?= $discount['id']; ?>" class="text-blue-500">Edit</a> | 
-                            <a href="discount_process.php?delete=<?= $discount['id']; ?>" class="text-red-500" 
-                            onclick="return confirm('Hapus diskon ini?')">Hapus</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-
-
-
-            
-        </table>
+        <table class="w-full bg-white rounded-lg shadow overflow-hidden">
+    <thead class="bg-gray-100 text-left ">
+        <tr>
+            <th class="px-4 py-3 text-center">No</th>
+            <th class="px-4 py-3 text-center">Judul</th>
+            <th class="px-4 py-3 text-center">Tipe</th>
+            <th class="px-4 py-3 text-center">Produk</th>
+            <th class="px-4 py-3 text-center">Kategori</th>
+            <th class="px-4 py-3 text-center">Tipe Diskon</th>
+            <th class="px-4 py-3 text-center">Nilai Diskon</th>
+            <th class="px-4 py-3 text-center">Jumlah Minimal</th>
+            <th class="px-4 py-3 text-center">Mulai</th>
+            <th class="px-4 py-3 text-center">Berakhir</th>
+            <th class="px-4 py-3 text-center">Status</th>
+            <th class="px-4 py-3 text-center">Aksi</th>
+        </tr>
+    </thead>
+    <tbody id="discountList">
+        <?php
+        $no = 1;
+        $today = date('Y-m-d');
+        foreach ($discounts as $discount): 
+            $isActive = ($today >= $discount['start_date'] && $today <= $discount['end_date']);
+        ?>
+        <tr class="border-t">
+            <td class="px-4 py-2"><?= $no++; ?></td>
+            <td class="px-4 py-2"><?= htmlspecialchars($discount['name']); ?></td>
+            <td class="px-4 py-2"><?= htmlspecialchars($discount['type']); ?></td>
+            <td class="px-4 py-2"><?= $discount['product_name'] ?: '-'; ?></td>
+            <td class="px-4 py-2"><?= $discount['category_name'] ?: '-'; ?></td>
+            <td class="px-4 py-2"><?= ucfirst($discount['discount_type']); ?></td>
+            <td class="px-4 py-2">
+                <?= $discount['discount_type'] === 'percentage' 
+                    ? number_format($discount['discount_value'], 2, ',', '.') . '%' 
+                    : 'Rp ' . number_format($discount['discount_value'], 0, ',', '.'); ?>
+            </td>
+            <td class="px-4 py-2"><?= $discount['min_quantity'] ?: '-'; ?></td>
+            <td class="px-4 py-2"><?= date('d-m-Y', strtotime($discount['start_date'])); ?></td>
+            <td class="px-4 py-2"><?= date('d-m-Y', strtotime($discount['end_date'])); ?></td>
+            <td class="px-4 py-2">
+                <span class="px-3 py-1 rounded-full text-white text-sm font-medium <?= $isActive ? 'bg-green-500' : 'bg-red-500' ?>"></span>
+            </td>
+            <td class="px-4 py-2 text-center">
+                <a href="discount_form.php?id=<?= $discount['id']; ?>" class="bg-yellow-400 text-white px-3 py-1 rounded mr-1 inline-block">Edit</a>
+                <a href="discount_process.php?delete=<?= $discount['id']; ?>" class="bg-red-500 text-white px-3 py-1 rounded inline-block"
+                   onclick="return confirm('Hapus diskon ini?')">Hapus</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 
     </div>
 
