@@ -3,6 +3,9 @@ $requireAdmin = true;
 require '../auth.php';
 require '../connection.php';
 
+$currentUserId = $_SESSION['user_id'];
+
+
 // Ambil semua user dan role
 $users = $pdo->query("SELECT users.*, roles.role_name FROM users JOIN roles ON users.role_id = roles.id ORDER BY users.created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
 $roles = $pdo->query("SELECT * FROM roles")->fetchAll(PDO::FETCH_ASSOC);
@@ -48,8 +51,15 @@ $roles = $pdo->query("SELECT * FROM roles")->fetchAll(PDO::FETCH_ASSOC);
                             data-role="<?= $u['role_id'] ?>">
                             Edit
                         </button>
-                        <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded" 
-                            data-id="<?= $u['id'] ?>">Hapus</button>
+                        <?php if ($u['id'] == $currentUserId): ?>
+                            <button class="bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed" disabled>
+                                Hapus
+                            </button>
+                        <?php else: ?>
+                            <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded" 
+                                data-id="<?= $u['id'] ?>">Hapus</button>
+                        <?php endif; ?>
+
                     </td>
                 </tr>
                 <?php endforeach; ?>

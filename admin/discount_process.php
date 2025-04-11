@@ -23,6 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
     if ($discount_type === 'percentage' && $discount_value >= 100) {
         die("Diskon persentase tidak boleh lebih dari 100%.");
     }
+    if ($discount_type === 'fixed' && $discount_value >= 100000) {
+        die("Potongan diskon tidak boleh lebih dari Rp 100.000");
+    }
 
 
     if ($id) {

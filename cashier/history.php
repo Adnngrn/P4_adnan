@@ -20,7 +20,6 @@ $now = strtotime(date('Y-m-d 00:00:00'));
 $yesterday = strtotime('-1 day', $now);
 $weekAgo = strtotime('-7 days', $now);
 $monthAgo = strtotime('-1 month', $now);
-$twoMonthsAgo = strtotime('-2 months', $now);
 
 foreach ($transactions as $transaction) {
     $created_at = strtotime($transaction['created_at']);
@@ -33,8 +32,6 @@ foreach ($transactions as $transaction) {
         $filters["thisWeek"][] = $transaction;
     } elseif ($created_at >= $monthAgo) {
         $filters["thisMonth"][] = $transaction;
-    } elseif ($created_at >= $twoMonthsAgo) {
-        $filters["lastMonth"][] = $transaction;
     } else {
         $filters["older"][] = $transaction;
     }
@@ -82,7 +79,6 @@ $transactionsJSON = json_encode($filters);
             <option value="yesterday">Kemarin</option>
             <option value="thisWeek">7 Hari Kebelakang</option>
             <option value="thisMonth">30 Hari Kebelakang</option>
-            <option value="lastMonth">Bulan lalu</option>
             <option value="older">Terlama</option>
         </select>
 

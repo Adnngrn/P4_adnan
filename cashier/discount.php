@@ -1,6 +1,6 @@
 <?php
 require '../auth.php';
-require_once '../connection.php'; // atau sesuaikan nama file koneksimu
+require_once '../connection.php';
 
 $today = date('Y-m-d');
 

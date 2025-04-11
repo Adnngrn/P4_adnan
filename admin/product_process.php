@@ -12,9 +12,28 @@ if (isset($_POST['save'])) {
     $arrival_date = $_POST['arrival_date'];
     $imageName = '';
 
+    if ($price < 1000) {
+        echo "<script>alert('Harga produk tidak boleh kurang dari 1000!'); window.history.back();</script>";
+        exit;
+    }
+
     // Proses Upload Gambar (jika ada)
     if (!empty($_FILES['image']['name'])) {
+        // Jika ada gambar baru yang di-upload
         $imageName = time() . '_' . $_FILES['image']['name'];
+
+        // Jika ini adalah proses edit produk, hapus gambar lama terlebih dahulu jika ada
+        if ($id) {
+            $stmt = $pdo->prepare("SELECT image FROM products WHERE id = ?");
+            $stmt->execute([$id]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($product && !empty($product['image'])) {
+                // Hapus gambar lama jika ada
+                unlink("../product_img/" . $product['image']);
+            }
+        }
+
+        // Upload gambar baru
         move_uploaded_file($_FILES['image']['tmp_name'], "../product_img/" . $imageName);
     }
 
@@ -46,6 +65,7 @@ if (isset($_GET['delete'])) {
     $stmt->execute([$id]);
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($product && !empty($product['image'])) {
+        // Hapus gambar dari folder
         unlink("../product_img/" . $product['image']);
     }
 
@@ -56,3 +76,4 @@ if (isset($_GET['delete'])) {
     header("Location: product.php");
     exit;
 }
+?>

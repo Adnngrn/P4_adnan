@@ -117,6 +117,10 @@ $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC
                     discountValue.val(0);
                     alert('Nilai diskon persentase tidak boleh lebih dari atau sama dengan 100%');
                 }
+                if (discountType === 'fixed' && discountValue.val() > 100000) {
+                    discountValue.val(0);
+                    alert('Nilai diskon fixed tidak boleh lebih dari Rp 100.000');
+                }
             }
 
             toggleFields();

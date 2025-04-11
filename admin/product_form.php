@@ -71,5 +71,17 @@ $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC
     </div>
 
     <script src="script.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').on('submit', function (e) {
+                const harga = parseInt($('input[name="price"]').val());
+                if (harga < 1000) {
+                    alert("Harga produk tidak boleh kurang dari 1000!");
+                    e.preventDefault(); // Mencegah form dikirim
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

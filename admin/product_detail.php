@@ -43,11 +43,11 @@ if (!$product) {
             <a href="product.php" class="inline-block bg-blue-500 text-white px-4 py-2 rounded-t-md">Kembali</a>
             <div>
                 <a href="product_form.php?id=<?= $product['id']; ?>" class="inline-block bg-yellow-500 text-white px-4 py-2 rounded-t-md">Edit</a>
-                 <!-- |  -->
-                <!-- <a href="product_process.php?delete=<?= $product['id']; ?>" class="inline-block bg-red-500 text-white px-4 py-2 rounded-t-md" 
+                 | 
+                <a href="product_process.php?delete=<?= $product['id']; ?>" class="inline-block bg-red-500 text-white px-4 py-2 rounded-t-md" 
                 onclick="return confirm('Hapus <?= $product['name']; ?>?')">
                 Hapus
-                </a> -->
+                </a>
             </div>
 
         </div>
